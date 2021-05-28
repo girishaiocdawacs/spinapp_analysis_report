@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- add icon link -->
+    <link rel="icon" href="images/logo.jpg" type="image/x-icon">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Impact Analysis Report | SmartFied App</title>
+    <style>
+        .shadow {
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    <script>
+        let data = {}
+
+        var request = new XMLHttpRequest()
+        // function apiFetch() {
+
+
+        var xmlhttp = new XMLHttpRequest();
+        var url = "http://localhost:8110/api/POB/GetCompaniesInfo";
+
+        var helpers = {
+    buildDropdown: function(result, dropdown, emptyMessage)
+    {
+        // Remove current options
+        dropdown.html('');
+        dropdown.html('<select>')
+        // Add the empty option with the empty message
+        dropdown.append('<option value="">' + emptyMessage + '</option>');
+
+        // Check result isnt empty
+        if(result != '')
+        {
+            $.each(result, function(k, v) {
+                dropdown.append('<option value="' + k + '">' + v + '</option>');
+            });
+        }
+        dropdown.append('</select>')
+    }
+}
+
+
+        function getData(geturl) {
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    helpers.buildDropdown(JSON.parse(this.responseText), $('#dropdown'), 'Choose a company');
+                }
+            };
+            xmlhttp.open("GET", geturl, true);
+            xmlhttp.setRequestHeader( 'Access-Control-Allow-Origin', '*');
+            xmlhttp.send();
+        }
+
+        function putRequest() {
+            userid = document.getElementById('category').value
+            console.log(userid)
+            geturl = url + userid
+            getData(geturl)
+        }
+
+        function getAll() {
+            getData(url)
+        }
+
+    </script>
+</head>
+
+<body class="bg-light">
+    <!-- Header -->
+    <div class="bg-white p-3 text-center text-dark h2 shadow">
+        <div class="row">
+            <div class="col-3 text-left">
+                <a href="#"><img src="./images/logo.jpg" height="40px" width="40px"></a>
+            </div>
+            <div class="col-9 text-left">
+                SPIN App - Analytics
+            </div>
+        </div>
+    </div>
+    <!-- Filter Form -->
+    <div class="container mt-3 card bg-white p-4">
+        <div class="h4">Filter:</div>
+        <form class="row">
+            <div class="form-group col">
+                <label for="category">Category</label>
+                <select class="form-control" id="category">
+                    <option>Near_Expiry</option>
+                    <option>Non_Moving</option>
+                    <option>Over_Stock</option>
+                    <option>Under_Stock</option>
+                </select>
+            </div>
+            <div id="dropdown">
+                
+            </div>
+        </form>
+        <div class="test-right">
+            <button type="button" onclick="getAll()" class="btn btn-success">Download Impact Analysis Report</button>
+        </div>
+    </div>
+    <!-- Response Table -->
+    <div class="container">
+        <div class="container mt-5">
+            <h2>List</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">userid</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Des</th>
+                        <th scope="col">id</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+        </div>
+        </table>
+    </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
