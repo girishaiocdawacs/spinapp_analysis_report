@@ -40,7 +40,6 @@
 
         var xmlhttp = new XMLHttpRequest();
         var url = "http://app.awacsdev.com/smartfield/api/POB/GetCompaniesInfo"
-        var mrurl = "http://app.awacsdev.com/smartfield/api/POB/GetMedicalRepresentativeByCompany?company="
         let baseurl = "http://app.awacsdev.com/smartfield"
         var companies
         let options1 = '<option>Select Company</option>'
@@ -80,7 +79,7 @@
                     document.getElementById('dropdown2').innerHTML = options2
                 }
             };
-            xmlhttp.open("GET", mrurl + company, true);
+            xmlhttp.open("GET", baseurl + "http://app.awacsdev.com/smartfield/api/POB/GetMedicalRepresentativeByCompany?company=" + company, true);
             xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
             xmlhttp.send();
         }
@@ -99,12 +98,12 @@
                     document.getElementById('dropdown3').innerHTML = options3
                 }
             }
-            xmlhttp.open('POST', 'http://app.awacsdev.com/smartfield/api/POB/GetStockistByCompanyAndMRs?company=' + company, true);
+            xmlhttp.open('POST', baseurl + '/api/POB/GetStockistByCompanyAndMRs?company=' + company, true);
             xmlhttp.setRequestHeader('Content-Type', 'application/json');
             xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
             xmlhttp.send(body);
         }
-
+        //Show MRs
         function showmrs() {
             len = document.getElementsByName('int').length
             mrsarr = []
@@ -118,9 +117,7 @@
             document.getElementById('selectedmrs').value = mrsarr1
             dropdown3()
         }
-
-
-
+        // Show Distributors
         function showdist() {
             len = document.getElementsByName('inp').length
             distsrr = []
@@ -137,17 +134,12 @@
         function reportShow() {
             let activity = document.getElementById('category').value
             let tab_rows = ''
-            // "CompanyName": company,
-
-            // "MedicalRepresentatives": [mrs],
-
             body = JSON.stringify({
                 "CompanyName": company,
                 "MedicalRepresentatives": mrsarr,   // mrsarr,
                 "Distributors": distsrr,
             })
             xmlhttp.open('POST', baseurl + '/api/POB/CollectImpactAnalysisReport?Activity=' + activity, true);
-
             //Send the proper header information along with the request
             xmlhttp.setRequestHeader('Content-Type', 'application/json');
             document.getElementById('count').innerHTML = "(Loading...)"
@@ -209,7 +201,6 @@
             <div class="form-group col">
                 <label for="">Companies</label>
                 <div id="dropdown1"></div>
-
             </div>
             <div class="form-group col">
                 <label for="selectedmrs">Medical Representative
@@ -219,9 +210,7 @@
                 <textarea disabled class="form-control" placeholder="Selected" id="selectedmrs"></textarea>
                 <span onclick="show()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add</span>
                 <ul id="dropdown2" style="display: none;" class="dropdown2">
-
                 </ul>
-
             </div>
             <div class="form-group col">
                 <label for="selecteddist">Distributors
@@ -236,10 +225,8 @@
             </div>
         </form>
         <div class="test-right">
-            <button type="button" onclick="reportShow()" class="btn btn-success">Download Impact Analysis
+            <button type="button" onclick="reportShow()" class="btn btn-success">Show Impact Analysis
                 Report</button>
-            <button type="button" onclick="test()" class="btn btn-danger">Download </button>
-
         </div>
     </div>
     <!-- Response Table -->
