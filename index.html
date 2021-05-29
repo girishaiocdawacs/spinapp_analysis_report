@@ -272,15 +272,16 @@
             </div>
         </form>
         <div class="test-right">
-            <button type="button" onclick="reportShow()" class="btn btn-success">Show Impact Analysis
+            <button type="button" onclick="reportShow()" class="btn btn-primary">Show Impact Analysis
                 Report</button>
+            <!-- <button type="button" onclick="exporttab()" class="btn btn-success">Export Report</button> -->
         </div>
     </div>
     <!-- Response Table -->
     <div class="container-fluid">
         <h2>List</h2>
         <h5 id='count'></h5>
-        <table class="table table-striped table-responsive">
+        <table id="reporttab" class="table table-striped table-responsive table-sm table-bordered">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">CompanyStockistCode</th>
