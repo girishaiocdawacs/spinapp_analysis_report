@@ -112,7 +112,10 @@
             for (let i = 0; i < len; i++) {
                 if (document.getElementsByName('int')[i].checked == true) {
                     mrsarr.push(document.getElementsByName('int')[i].value)
-                    mrsarr1.push(i + ':' + document.getElementsByName('int')[i].value)
+                    mrsarr1.push(document.getElementsByName('int')[i].value)
+                }
+                else {
+                    document.getElementById('allmr').checked = false
                 }
             }
             document.getElementById('selectedmrs').value = mrsarr1
@@ -126,7 +129,10 @@
             for (let i = 0; i < len; i++) {
                 if (document.getElementsByName('inp')[i].checked == true) {
                     distsrr.push(document.getElementsByName('inp')[i].value)
-                    distarr1.push(i + ':' + document.getElementsByName('inp')[i].value)
+                    distarr1.push(document.getElementsByName('inp')[i].value)
+                }
+                else {
+                    document.getElementById('alldist').checked = false
                 }
             }
             document.getElementById('selecteddist').value = distarr1
@@ -164,7 +170,6 @@
                     document.getElementsByName('inp')[i].checked = false
                 }
                 showdist()
-                hide2()
             }
         }
 
@@ -241,28 +246,26 @@
                 <div id="dropdown1"></div>
             </div>
             <div class="form-group col">
-                <label for="selectedmrs">Medical Representative
-                    <span onclick="hide()" style="cursor: pointer; color: rgb(184, 182, 179);"
-                        class="disabled">hide</span>
-                </label>
+                <label for="selectedmrs">Medical Representative</label>
                 <textarea disabled class="form-control" placeholder="Selected" id="selectedmrs"></textarea>
                 <span onclick="show()" style="cursor: pointer; color: rgb(184, 182, 179);">Add&emsp;
                     |&emsp;</span>
                 <input type="checkbox" onchange="selectallmr()" id="allmr"> <span
-                    style="cursor: pointer; color: rgb(184, 182, 179);">Select All</span>
+                    style="cursor: pointer; color: rgb(184, 182, 179);">Select All&emsp;
+                    |&emsp;</span>
+                <span onclick="hide()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">hide</span>
                 <ul id="dropdown2" style="display: none;" class="dropdown2">
                 </ul>
             </div>
             <div class="form-group col">
-                <label for="selecteddist">Distributors
-                    <span onclick="hide2()" style="cursor: pointer; color: rgb(184, 182, 179);"
-                        class="disabled">hide</span>
-                </label>
+                <label for="selecteddist">Distributors</label>
                 <textarea disabled class="form-control" placeholder="Selected" id="selecteddist"></textarea>
                 <span onclick="show2()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add&emsp;
                     |&emsp;</span>
-                <input type="checkbox" onchange="selectalldist()" id="alldist"> <span
-                    style="cursor: pointer; color: rgb(184, 182, 179);">Select All</span>
+                <input type="checkbox" onchange="selectalldist()" id="alldist">
+                <span style="cursor: pointer; color: rgb(184, 182, 179);">Select All&emsp;
+                    |&emsp;</span>
+                <span onclick="hide2()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">hide</span>
                 <ul id="dropdown3" style="display: none;" class="dropdown2">
 
                 </ul>
