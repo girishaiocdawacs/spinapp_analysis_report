@@ -39,7 +39,6 @@
         let company = ''
 
         var xmlhttp = new XMLHttpRequest();
-        var url = "http://app.awacsdev.com/smartfield/api/POB/GetCompaniesInfo"
         let baseurl = "http://app.awacsdev.com/smartfield"
         var companies
         let options1 = '<option>Select Company</option>'
@@ -47,9 +46,9 @@
         let options3 = ''
 
         function get() {
-            dropdown1(url)
+            dropdown1()
         }
-        function dropdown1(url) {
+        function dropdown1() {
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     companies = JSON.parse(this.responseText)
@@ -60,7 +59,7 @@
                     document.getElementById('dropdown1').innerHTML = "<select class='form-control' onchange='dropdown2()' id='company'>" + options1 + "</select>"
                 }
             };
-            xmlhttp.open("GET", url, true);
+            xmlhttp.open("GET", baseurl + "/api/POB/GetCompaniesInfo", true);
             xmlhttp.setRequestHeader('Content-Type', 'application/json');
             xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
             xmlhttp.send();
@@ -229,7 +228,7 @@
         </div>
     </div>
     <!-- Filter Form -->
-    <div class="container mt-3 card bg-white p-4">
+    <div class="container mt-3 card bg-white p-4 shadow">
         <div class="h4">Filter:</div>
         <form class="row">
             <div class="form-group col">
@@ -278,7 +277,7 @@
         </div>
     </div>
     <!-- Response Table -->
-    <div class="container-fluid">
+    <div class="container-fluid mt-5 bg-white p-4">
         <h2>List</h2>
         <h5 id='count'></h5>
         <table id="reporttab" class="table table-striped table-responsive table-sm table-bordered">
