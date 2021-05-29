@@ -67,7 +67,6 @@
 
         function dropdown2() {
             company = document.getElementById('company').value
-            console.log(document.getElementById('company').value)
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById('dropdown2').style = ""
@@ -79,7 +78,7 @@
                     document.getElementById('dropdown2').innerHTML = options2
                 }
             };
-            xmlhttp.open("GET", baseurl + "http://app.awacsdev.com/smartfield/api/POB/GetMedicalRepresentativeByCompany?company=" + company, true);
+            xmlhttp.open("GET", baseurl + "/api/POB/GetMedicalRepresentativeByCompany?company=" + company, true);
             xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
             xmlhttp.send();
         }
@@ -87,7 +86,6 @@
 
         function dropdown3() {
             body = JSON.stringify(mrsarr)
-            console.log(body)
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     document.getElementById('dropdown3').style = ""
@@ -154,7 +152,6 @@
                     document.getElementById('tbody').innerHTML = tab_rows
                 }
             }
-            console.log(body)
             xmlhttp.send(body);
         }
 
