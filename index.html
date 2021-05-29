@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- add icon link -->
-    <link rel="icon" href="images/logo.jpg" type="image/x-icon">
+    <link rel="icon" href="assests/images/logo.jpg" type="image/x-icon">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -18,69 +18,175 @@
         .shadow {
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
         }
+
+        ul {
+            list-style-type: none;
+            padding: 5px;
+        }
+
+        .dropdown2 {
+            height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+            background-color: rgb(235, 235, 235);
+            position: absolute;
+        }
     </style>
     <script>
         let data = {}
-
-        var request = new XMLHttpRequest()
-        // function apiFetch() {
-
+        let mrsarr = []
+        let distarr = []
+        let company = ''
 
         var xmlhttp = new XMLHttpRequest();
-        var url = "http://localhost:8110/api/POB/GetCompaniesInfo";
+        var url = "http://app.awacsdev.com/smartfield/api/POB/GetCompaniesInfo"
+        var mrurl = "http://app.awacsdev.com/smartfield/api/POB/GetMedicalRepresentativeByCompany?company="
+        let baseurl = "http://app.awacsdev.com/smartfield"
+        var companies
+        let options1 = '<option>Select Company</option>'
+        let options2 = ''
+        let options3 = ''
 
-        var helpers = {
-    buildDropdown: function(result, dropdown, emptyMessage)
-    {
-        // Remove current options
-        dropdown.html('');
-        dropdown.html('<select>')
-        // Add the empty option with the empty message
-        dropdown.append('<option value="">' + emptyMessage + '</option>');
-
-        // Check result isnt empty
-        if(result != '')
-        {
-            $.each(result, function(k, v) {
-                dropdown.append('<option value="' + k + '">' + v + '</option>');
-            });
+        function get() {
+            dropdown1(url)
         }
-        dropdown.append('</select>')
-    }
-}
-
-
-        function getData(geturl) {
+        function dropdown1(url) {
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    helpers.buildDropdown(JSON.parse(this.responseText), $('#dropdown'), 'Choose a company');
+                    companies = JSON.parse(this.responseText)
+                    // console.log(companies)
+                    for (let i = 0; i < companies.length; i++) {
+                        options1 += "<option>" + companies[i] + "</option>"
+                    }
+                    document.getElementById('dropdown1').innerHTML = "<select class='form-control' onchange='dropdown2()' id='company'>" + options1 + "</select>"
                 }
             };
-            xmlhttp.open("GET", geturl, true);
-            xmlhttp.setRequestHeader( 'Access-Control-Allow-Origin', '*');
+            xmlhttp.open("GET", url, true);
+            xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
             xmlhttp.send();
         }
 
-        function putRequest() {
-            userid = document.getElementById('category').value
-            console.log(userid)
-            geturl = url + userid
-            getData(geturl)
+        function dropdown2() {
+            company = document.getElementById('company').value
+            console.log(document.getElementById('company').value)
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('dropdown2').style = ""
+                    mrslist = JSON.parse(this.responseText)
+                    // console.log(mrslist)
+                    for (let i = 0; i < mrslist.length; i++) {
+                        options2 += "		<li><input type='checkbox' name='int' onchange='showmrs()' value='" + mrslist[i] + "'>&nbsp;" + mrslist[i] + "</li>"
+                    }
+                    document.getElementById('dropdown2').innerHTML = options2
+                }
+            };
+            xmlhttp.open("GET", mrurl + company, true);
+            xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xmlhttp.send();
         }
 
-        function getAll() {
-            getData(url)
+
+        function dropdown3() {
+            body = JSON.stringify(mrsarr)
+            console.log(body)
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById('dropdown3').style = ""
+                    distributors = JSON.parse(xmlhttp.responseText)
+                    for (let i = 0; i < distributors.length; i++) {
+                        options3 += "<li><input type='checkbox' name='inp' onchange='showdist()' value='" + distributors[i] + "'>&nbsp;" + distributors[i] + "</li>"
+                    }
+                    document.getElementById('dropdown3').innerHTML = options3
+                }
+            }
+            xmlhttp.open('POST', 'http://app.awacsdev.com/smartfield/api/POB/GetStockistByCompanyAndMRs?company=' + company, true);
+            xmlhttp.setRequestHeader('Content-Type', 'application/json');
+            xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xmlhttp.send(body);
         }
 
+        function showmrs() {
+            len = document.getElementsByName('int').length
+            mrsarr = []
+            mrsarr1 = []
+            for (let i = 0; i < len; i++) {
+                if (document.getElementsByName('int')[i].checked == true) {
+                    mrsarr.push(document.getElementsByName('int')[i].value)
+                    mrsarr1.push(i + ':' + document.getElementsByName('int')[i].value)
+                }
+            }
+            document.getElementById('selectedmrs').value = mrsarr1
+            dropdown3()
+        }
+
+
+
+        function showdist() {
+            len = document.getElementsByName('inp').length
+            distsrr = []
+            distarr1 = []
+            for (let i = 0; i < len; i++) {
+                if (document.getElementsByName('inp')[i].checked == true) {
+                    distsrr.push(document.getElementsByName('inp')[i].value)
+                    distarr1.push(i + ':' + document.getElementsByName('inp')[i].value)
+                }
+            }
+            document.getElementById('selecteddist').value = distarr1
+        }
+
+        function reportShow() {
+            let activity = document.getElementById('category').value
+            let tab_rows = ''
+            // "CompanyName": company,
+
+            // "MedicalRepresentatives": [mrs],
+
+            body = JSON.stringify({
+                "CompanyName": company,
+                "MedicalRepresentatives": mrsarr,   // mrsarr,
+                "Distributors": distsrr,
+            })
+            xmlhttp.open('POST', baseurl + '/api/POB/CollectImpactAnalysisReport?Activity=' + activity, true);
+
+            //Send the proper header information along with the request
+            xmlhttp.setRequestHeader('Content-Type', 'application/json');
+            document.getElementById('count').innerHTML = "(Loading...)"
+            xmlhttp.onreadystatechange = function () {//Call a function when the state changes.
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    tab_dtl = JSON.parse(xmlhttp.responseText)
+                    arr = tab_dtl['ImpactAnalysisReport']
+                    document.getElementById('count').innerHTML = "Total Count = " + arr.length
+                    for (let i = 0; i < arr.length; i++) {
+                        tab_rows += "<tr><td scope='col'>" + arr[i].CompanyStockistCode + "</td><td scope='col'>" + arr[i].AwacsStockistCode + "</td><td scope='col'>" + arr[i].StockistName + "</td><td scope='col'>" + arr[i].City + "</td><td scope='col'>" + arr[i].State + "</td><td scope='col'>" + arr[i].DivisionCode + "</td><td scope='col'>" + arr[i].DivisionName + "</td><td scope='col'>" + arr[i].ProductCode + "</td><td scope='col'>" + arr[i].ProductName + "</td><td scope='col'>" + arr[i].NewCategory + "</td><td scope='col'>" + arr[i].OldCategory + "</td><td scope='col'>" + arr[i].IsReadFlag + "</td><td scope='col'>" + arr[i].CreatedDate + "</td><td scope='col'>" + arr[i].Id + "</td><td scope='col'>" + arr[i].SalesRepName + "</td><td scope='col'>" + arr[i].SalesRep + "</td></tr>"
+                    }
+                    document.getElementById('tbody').innerHTML = tab_rows
+                }
+            }
+            console.log(body)
+            xmlhttp.send(body);
+        }
+
+        function hide() {
+            document.getElementById('dropdown2').style = 'display: none'
+        }
+        function hide2() {
+            document.getElementById('dropdown3').style = 'display: none'
+        }
+        function show() {
+            document.getElementById('dropdown2').style = ''
+        }
+        function show2() {
+            document.getElementById('dropdown3').style = ''
+        }
     </script>
 </head>
 
-<body class="bg-light">
+<body class="bg-light" onload="get()">
     <!-- Header -->
     <div class="bg-white p-3 text-center text-dark h2 shadow">
         <div class="row">
             <div class="col-3 text-left">
-                <a href="#"><img src="./images/logo.jpg" height="40px" width="40px"></a>
+                <a href="#"><img src="assests/images/logo.jpg" height="40px" width="40px"></a>
             </div>
             <div class="col-9 text-left">
                 SPIN App - Analytics
@@ -100,32 +206,70 @@
                     <option>Under_Stock</option>
                 </select>
             </div>
-            <div id="dropdown">
-                
+            <div class="form-group col">
+                <label for="">Companies</label>
+                <div id="dropdown1"></div>
+
+            </div>
+            <div class="form-group col">
+                <label for="selectedmrs">Medical Representative
+                    <span onclick="hide()" style="cursor: pointer; color: rgb(184, 182, 179);"
+                        class="disabled">hide</span>
+                </label>
+                <textarea disabled class="form-control" placeholder="Selected" id="selectedmrs"></textarea>
+                <span onclick="show()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add</span>
+                <ul id="dropdown2" style="display: none;" class="dropdown2">
+
+                </ul>
+
+            </div>
+            <div class="form-group col">
+                <label for="selecteddist">Distributors
+                    <span onclick="hide2()" style="cursor: pointer; color: rgb(184, 182, 179);"
+                        class="disabled">hide</span>
+                </label>
+                <textarea disabled class="form-control" placeholder="Selected" id="selecteddist"></textarea>
+                <span onclick="show2()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add</span>
+                <ul id="dropdown3" style="display: none;" class="dropdown2">
+
+                </ul>
             </div>
         </form>
         <div class="test-right">
-            <button type="button" onclick="getAll()" class="btn btn-success">Download Impact Analysis Report</button>
+            <button type="button" onclick="reportShow()" class="btn btn-success">Download Impact Analysis
+                Report</button>
+            <button type="button" onclick="test()" class="btn btn-danger">Download </button>
+
         </div>
     </div>
     <!-- Response Table -->
-    <div class="container">
-        <div class="container mt-5">
-            <h2>List</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">userid</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Des</th>
-                        <th scope="col">id</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                </tbody>
-        </div>
+    <div class="container-fluid">
+        <h2>List</h2>
+        <h4 id='count'></h4>
+        <table class="table table-striped table-responsive">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">CompanyStockistCode</th>
+                    <th scope="col">AwacsStockistCode</th>
+                    <th scope="col">StockistName</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">DivisionCode</th>
+                    <th scope="col">DivisionName</th>
+                    <th scope="col">ProductCode</th>
+                    <th scope="col">ProductName</th>
+                    <th scope="col">NewCategory</th>
+                    <th scope="col">OldCategory</th>
+                    <th scope="col">IsReadFlag</th>
+                    <th scope="col">CreatedDate</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">SalesRepName</th>
+                    <th scope="col">SalesRep</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
         </table>
-    </div>
     </div>
 
 
