@@ -66,6 +66,8 @@
         }
 
         function dropdown2() {
+            hide2()
+            options2 = ''
             company = document.getElementById('company').value
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
@@ -83,8 +85,8 @@
             xmlhttp.send();
         }
 
-
         function dropdown3() {
+            options3 = ''
             body = JSON.stringify(mrsarr)
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -128,6 +130,43 @@
             }
             document.getElementById('selecteddist').value = distarr1
         }
+
+        function selectallmr() {
+            if (document.getElementById('allmr').checked == true) {
+                len = document.getElementsByName('int').length
+                for (let i = 0; i < len; i++) {
+                    document.getElementsByName('int')[i].checked = true
+                }
+                showmrs()
+            }
+            else {
+                len = document.getElementsByName('int').length
+                for (let i = 0; i < len; i++) {
+                    document.getElementsByName('int')[i].checked = false
+                }
+                showmrs()
+                hide2()
+            }
+        }
+
+        function selectalldist() {
+            if (document.getElementById('alldist').checked == true) {
+                len = document.getElementsByName('inp').length
+                for (let i = 0; i < len; i++) {
+                    document.getElementsByName('inp')[i].checked = true
+                }
+                showdist()
+            }
+            else {
+                len = document.getElementsByName('inp').length
+                for (let i = 0; i < len; i++) {
+                    document.getElementsByName('inp')[i].checked = false
+                }
+                showdist()
+                hide2()
+            }
+        }
+
         // Show Final Report
         function reportShow() {
             let activity = document.getElementById('category').value
@@ -205,7 +244,10 @@
                         class="disabled">hide</span>
                 </label>
                 <textarea disabled class="form-control" placeholder="Selected" id="selectedmrs"></textarea>
-                <span onclick="show()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add</span>
+                <span onclick="show()" style="cursor: pointer; color: rgb(184, 182, 179);">Add&emsp;
+                    |&emsp;</span>
+                <input type="checkbox" onchange="selectallmr()" id="allmr"> <span
+                    style="cursor: pointer; color: rgb(184, 182, 179);">Select All</span>
                 <ul id="dropdown2" style="display: none;" class="dropdown2">
                 </ul>
             </div>
@@ -215,7 +257,10 @@
                         class="disabled">hide</span>
                 </label>
                 <textarea disabled class="form-control" placeholder="Selected" id="selecteddist"></textarea>
-                <span onclick="show2()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add</span>
+                <span onclick="show2()" style="cursor: pointer; color: rgb(184, 182, 179);" class="disabled">Add&emsp;
+                    |&emsp;</span>
+                <input type="checkbox" onchange="selectalldist()" id="alldist"> <span
+                    style="cursor: pointer; color: rgb(184, 182, 179);">Select All</span>
                 <ul id="dropdown3" style="display: none;" class="dropdown2">
 
                 </ul>
